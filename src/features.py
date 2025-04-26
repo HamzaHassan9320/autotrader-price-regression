@@ -44,7 +44,7 @@ def make_preprocessor(numeric, categorical, *, poly: bool = False):
 
     cat_steps = [
         ("imputer", SimpleImputer(strategy="most_frequent")),
-        ("enc", TargetEncoder()),
+        ("enc", TargetEncoder().set_output(transform="pandas")),
     ]
     cat_pipe = Pipeline(cat_steps)            
 

@@ -8,51 +8,33 @@ from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor, V
 from sklearn.feature_selection import SelectKBest, f_regression
 from sklearn.decomposition import PCA
 from sklearn.model_selection import GridSearchCV
-
+from sklearn.feature_selection import SelectKBest, f_regression, RFECV, SequentialFeatureSelector
 from src.features import make_preprocessor
 
 
-def build_pipeline(
-    estimator,
-    numeric,
-    categorical,
-    *,
-    k_best: int | None = None,
-    poly: bool = False,
-    use_pca: bool = False,
-) -> Pipeline:
+def build_pipeline(estimator, numeric, categorical, *, k_best: int | None = None, rfecv: bool = False, sfs: bool = False, poly: bool = False, use_pca: bool = False,) -> Pipeline:
     steps: list[tuple] = [("prep", make_preprocessor(numeric, categorical, poly=poly))]
     if k_best:
         steps.append(("select", SelectKBest(f_regression, k=k_best)))
+    if rfecv:
+        steps.append(("select", RFECV(estimator=estimator, step=1, cv=5)))
+    if sfs:
+        steps.append(("select",SequentialFeatureSelector(estimator=estimator,n_features_to_select="auto",direction="forward")))
     if use_pca:
         steps.append(("pca", PCA()))
     steps.append(("model", estimator))
     return Pipeline(steps)
 
 def pipe_lr(numeric, categorical):
-    return build_pipeline(
-        LinearRegression(), numeric, categorical, poly=True, k_best=10, use_pca=True
-    )
+    return build_pipeline(LinearRegression(),numeric,categorical,poly=True,k_best=10,use_pca=True)
 
 
 def pipe_rfr(numeric, categorical):
-    return build_pipeline(
-        RandomForestRegressor(max_depth=10),
-        numeric,
-        categorical,
-        k_best=10,
-        use_pca=True,
-    )
+    return build_pipeline(RandomForestRegressor(max_depth=10),numeric,categorical,k_best=10,rfecv=False,sfs=False,use_pca=True,)
 
 
 def pipe_gbr(numeric, categorical):
-    return build_pipeline(
-        GradientBoostingRegressor(max_depth=7, learning_rate=0.1),
-        numeric,
-        categorical,
-        k_best=10,
-        use_pca=True,
-    )
+    return build_pipeline(GradientBoostingRegressor(max_depth=7, learning_rate=0.1),numeric,categorical,k_best=10,rfecv=False,sfs=False,use_pca=True,)
 
 
 def pipe_ensemble(numeric, categorical):
@@ -76,8 +58,11 @@ GRID_GBR = {
 
 
 def grid_search(pipe, grid, X, y, cv: int = 5):
-    gs = GridSearchCV(
-        pipe, param_grid=grid, cv=cv, scoring="neg_mean_absolute_error", n_jobs=-1
-    )
+    gs = GridSearchCV(pipe, param_grid=grid, cv=cv, scoring="neg_mean_absolute_error", n_jobs=-1)
     gs.fit(X, y)
     return gs
+
+def best_from_gs(gs):
+    best = gs.best_estimator_
+    best.set_params(**gs.best_params_)
+    return best

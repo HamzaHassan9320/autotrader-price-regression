@@ -57,7 +57,7 @@ conda env create -f environment.yml
 conda activate autotrader-price
 
 # full pipeline
-python src/train.py --config configs/base.yaml
+python -m src.train --csv data/Adverts.csv
 ```
 
 Tested with Python 3.10 and scikit‑learn 1.3.2.
