@@ -34,13 +34,11 @@ with col1:
     )
 
 with col2:
-    standard_make = st.selectbox("Make", list_makes())
-    model_options = list_models(standard_make)
-    if model_options:
-        standard_model = st.selectbox("Model", model_options)
-    else:
-        standard_model = st.text_input("Model (type manually)", "")
-
+    makes = [""] + list_makes()        
+    standard_make = st.selectbox("Make",makes,index=0,format_func=lambda x: "Select make…" if x == "" else x)
+    models = list_models(standard_make) if standard_make else []
+    models = [""] + models
+    standard_model = st.selectbox("Model",models,index=0,format_func=lambda x: "Select model…" if x == "" else x)
     standard_colour = st.text_input("Colour", "Black")
     crossover_flag  = st.checkbox("Car-and-Van crossover?", False)
 

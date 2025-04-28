@@ -1,7 +1,7 @@
 # AutoTrader Price Regression
-+ [![Open in Streamlit](https://static.streamlit.io/badges/streamlit_badge_black.svg)](https://autotraderml.streamlit.app/)
-+
-+ [![Screenshot of the Streamlit UI](docs/images/app_ui.png)](https://autotraderml.streamlit.app/)
+[![Open in Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://autotraderml.streamlit.app/)
+
+[![Screenshot of the Streamlit UI](docs/images/app_ui.png)](https://autotraderml.streamlit.app/)
 
 
 Predicting second‑hand car prices with classic tabular ML.  
