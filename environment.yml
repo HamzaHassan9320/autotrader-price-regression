@@ -9,10 +9,7 @@ dependencies:
   - seaborn
   - category_encoders
   - shap=0.44.1
-  - joblib
   - pyyaml
   - notebook
   - streamlit
-  - pip             
-  - pip:
-      - joblib  
+  - pip    
