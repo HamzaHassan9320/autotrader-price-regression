@@ -13,3 +13,6 @@ dependencies:
   - pyyaml
   - notebook
   - streamlit
+  - pip             
+  - pip:
+      - joblib  
