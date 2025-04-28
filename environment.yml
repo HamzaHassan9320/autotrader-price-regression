@@ -9,6 +9,7 @@ dependencies:
   - category_encoders
   - shap=0.44.1
   - pyyaml
+  - joblib
   - notebook
   - streamlit
   - pip    
